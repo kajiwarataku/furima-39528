@@ -1,24 +1,58 @@
-# README
+# テーブル設計
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## usersテーブル
+| Column             | Type   | Options                   |
+| ------------------ | ------ | ------------------------- |
+| email              | string | null: false, unique: true |
+| encrypted_password | string | null: false               |
+| name               | string | null: false               |
+| nickname           | string | null: false               |
+| birth_date         | string | null: false               |
 
-Things you may want to cover:
+### Association
+- has_many :items
+- has_many :purchases
 
-* Ruby version
 
-* System dependencies
+## itemsテーブル
+| Column             | Type   | Options                        |
+| ------------------ | ------ | ------------------------------ |
+| name               | string | null: false                    |
+| description        | string | null: false                    |
+| category           | string | null: false                    |
+| condition          | string | null: false                    |
+| bear               | string | null: false                    |
+| area               | string | null: false                    |
+| days               | string | null: false                    |
+| price              | string | null: false                    |
+| user               | string | null: false, foreign_key: true |
 
-* Configuration
+### Association
+- has_one :purchases
+- belongs_to :users
 
-* Database creation
 
-* Database initialization
+## purchasesテーブル
+| Column             | Type   | Options                        |
+| ------------------ | ------ | ------------------------------ |
+| item               | string | null: false, foreign_key: true |
+| user               | string | null: false, foreign_key: true |
 
-* How to run the test suite
+### Association
+- belongs_to :users
+- belongs_to :items
+- has_one :address
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+## addressテーブル
+| Column             | Type   | Options                        |
+| ------------------ | ------ | ------------------------------ |
+| post_code          | string | null: false                    |
+| prefectures        | string | null: false                    |
+| municipality       | string | null: false                    |
+| house_number       | string | null: false                    |
+| building_name      | string | null: false                    |
+| telephone_number   | string | null: false                    |
 
-* ...
+### Association
+- belongs_to :purchases
