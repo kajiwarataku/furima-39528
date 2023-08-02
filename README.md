@@ -21,12 +21,12 @@
 | Column             | Type       | Options                        |
 | ------------------ | ---------- | ------------------------------ |
 | name               | string     | null: false                    |
-| description        | string     | null: false                    |
-| category           | integer    |null: false                    |
-| condition          | integer    | null: false                    |
-| bear               | integer    | null: false                    |
-| area               | integer    | null: false                    |
-| day                | integer    | null: false                    |
+| description        | text       | null: false                    |
+| category_id        | integer    | null: false                    |
+| condition_id       | integer    | null: false                    |
+| bear_id            | integer    | null: false                    |
+| area_id            | integer    | null: false                    |
+| send_day_id        | integer    | null: false                    |
 | price              | integer    | null: false                    |
 | user               | references | null: false, foreign_key: true |
 
@@ -44,20 +44,19 @@
 ### Association
 - belongs_to :user
 - belongs_to :item
-- has_one :addres
+- has_one :address
 
 
-## addressテーブル
+## addressesテーブル
 | Column             | Type      | Options                        |
 | ------------------ | --------- | ------------------------------ |
 | post_code          | string    | null: false                    |
-| area               | integer   | null: false                    |
+| area_id            | integer   | null: false                    |
 | municipality       | string    | null: false                    |
 | house_number       | string    | null: false                    |
 | building_name      | string    |                                |
-| telephone_number   | string    | null: false, foreign_key: true |
+| telephone_number   | string    | null: false                    |
 | purchase           | references| null: false, foreign_key: true |
 
 ### Association
 - belongs_to :purchase
- 
