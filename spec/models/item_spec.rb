@@ -20,13 +20,13 @@ RSpec.describe Item, type: :model do
       end
 
       it 'descriptionが空では登録できない' do
-        @item.description  = ''
+        @item.description = ''
         @item.valid?
         expect(@item.errors.full_messages).to include("Description can't be blank")
       end
 
       it 'category_idが空では登録できない' do
-        @item.category_id  = ''
+        @item.category_id = ''
         @item.valid?
         expect(@item.errors.full_messages).to include("Category can't be blank")
       end
@@ -73,22 +73,22 @@ RSpec.describe Item, type: :model do
         expect(@item.errors.full_messages).to include("Image can't be blank")
       end
 
-      it "価格が300以下の場合登録できない" do
+      it '価格が300以下の場合登録できない' do
         @item.price = 100
         @item.valid?
-        expect(@item.errors.full_messages).to include("Price must be greater than or equal to 300")
-      end
-    
-      it "価格が9,999,999以上の場合登録できない" do
-        @item.price = 10_000_000
-        @item.valid?
-        expect(@item.errors.full_messages).to include("Price must be less than or equal to 9999999")
+        expect(@item.errors.full_messages).to include('Price must be greater than or equal to 300')
       end
 
-      it "価格は半角数値のみ保存可能であること" do
+      it '価格が9,999,999以上の場合登録できない' do
+        @item.price = 10_000_000
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price must be less than or equal to 9999999')
+      end
+
+      it '価格は半角数値のみ保存可能であること' do
         @item.price = '１２ab'
         @item.valid?
-        expect(@item.errors.full_messages).to include("Price is not a number")
+        expect(@item.errors.full_messages).to include('Price is not a number')
       end
     end
   end
