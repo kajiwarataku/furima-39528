@@ -129,7 +129,7 @@
     <ul class='item-lists'>
       <% @items.each do |item| %>
         <li class='list'>
-          <%= link_to "#" do %>
+          <%= link_to item_path(item) do %>
             <div class='item-img-content'>
               <% if item.image.attached? %>
                 <%= image_tag item.image, class: "item-img" %>
@@ -179,7 +179,7 @@
   <%# /商品一覧 %>
 </div>
 <% if current_user %>
-  <%= link_to new_item_path, class: 'purchase-btn' do %>
+  <%= link_to(new_item_path, class: 'purchase-btn',data: { turbo: false }) do %>
     <span class='purchase-btn-text'>出品する</span>
     <%= image_tag 'icon_camera.png' , size: '185x50' ,class: "purchase-btn-icon" %>
   <% end %>
