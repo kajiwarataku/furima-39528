@@ -21,10 +21,10 @@ class ItemsController < ApplicationController
 
   def show
     @item = Item.find(params[:id])
-    if user_signed_in?
-      @is_owner = current_user == @item.user
-      @can_purchase = !@is_owner && !@item.sold_out?
-    end
+    return unless user_signed_in?
+
+    @is_owner = current_user == @item.user
+    @can_purchase = !@is_owner && !@item.sold_out?
   end
 
   private
