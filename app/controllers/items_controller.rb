@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :authenticate_user!, only: [:new]
 
   def index
@@ -16,6 +16,14 @@ class ItemsController < ApplicationController
       redirect_to root_path
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    @item = Item.find(params[:id])
+    if user_signed_in?
+      @is_owner = current_user == @item.user
+      @can_purchase = !@is_owner && !@item.sold_out?
     end
   end
 
