@@ -28,7 +28,6 @@ class ItemsController < ApplicationController
   end
 
   def edit
-    redirect_to root_path unless can_edit_item?
   end
 
   def update
