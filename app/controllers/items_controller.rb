@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :new, :edit, :update]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_item, only: [:show, :edit, :update]
+  before_action :restrict_edit_access, only: [:edit]
 
   def index
     @items = Item.order(created_at: :desc)
@@ -27,9 +28,7 @@ class ItemsController < ApplicationController
   end
 
   def edit
-    return unless !user_signed_in? || current_user != @item.user
-
-    redirect_to root_path
+    redirect_to root_path unless can_edit_item?
   end
 
   def update
@@ -41,6 +40,19 @@ class ItemsController < ApplicationController
   end
 
   private
+
+  def restrict_edit_access
+    redirect_to root_path unless can_edit_item?
+  end
+
+  def can_edit_item?
+    user_signed_in? && current_user == @item.user
+  end
+
+  def set_item
+    @item = Item.find(params[:id])
+  end
+
 
   def item_params
     params.require(:item).permit(:name, :description, :price, :category_id, :condition_id, :bear_id, :area_id, :send_day_id,
