@@ -22,15 +22,16 @@ class ItemsController < ApplicationController
   def show
     @item = Item.find(params[:id])
     return unless user_signed_in?
+
     @is_owner = current_user == @item.user
     @can_purchase = !@is_owner && !@item.sold_out?
   end
 
   def edit
     @item = Item.find(params[:id])
-    if !user_signed_in? || current_user != @item.user
-      redirect_to root_path
-    end
+    return unless !user_signed_in? || current_user != @item.user
+
+    redirect_to root_path
   end
 
   def update
