@@ -2,6 +2,7 @@ class PurchasesController < ApplicationController
   before_action :non_purchased_item, only: [:index, :create]
 
   def index
+    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
     @order_form = OrderForm.new
   end
 
