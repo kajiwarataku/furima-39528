@@ -18,8 +18,17 @@ class PurchasesController < ApplicationController
 
   private
 
-  def order_params
+  def purchase_params
     params.require(:order_form).permit(:post_code , :area_id, :municipality, :house_number, :building_name, :telephone_number).merge(user_id: current_user.id, item_id: params[:item_id], token: params[:token])
+  end
+
+  def pay_item
+    Payjp.api_key = "sk_test_58bbe72fec6a62c883c28813"
+    Payjp::Charge.create(
+      amount: @item.price,
+      card: purchase_params[:token],
+      currency: 'jpy'
+    )
   end
 
   def non_purchased_item
