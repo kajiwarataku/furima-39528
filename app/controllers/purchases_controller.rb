@@ -1,8 +1,9 @@
 class PurchasesController < ApplicationController
+  before_action :authenticate_user!
   before_action :non_purchased_item, only: [:index, :create]
 
   def index
-    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
+    gon.public_key = ENV['PAYJP_PUBLIC_KEY']
     @order_form = OrderForm.new
   end
 
@@ -20,11 +21,13 @@ class PurchasesController < ApplicationController
   private
 
   def purchase_params
-    params.require(:order_form).permit(:post_code , :area_id, :municipality, :house_number, :building_name, :telephone_number).merge(user_id: current_user.id, item_id: params[:item_id], token: params[:token])
+    params.require(:order_form).permit(:post_code, :area_id, :municipality, :house_number, :building_name, :telephone_number).merge(
+      user_id: current_user.id, item_id: params[:item_id], token: params[:token]
+    )
   end
 
   def pay_item
-    Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
+    Payjp.api_key = ENV['PAYJP_SECRET_KEY']
     Payjp::Charge.create(
       amount: @item.price,
       card: purchase_params[:token],
