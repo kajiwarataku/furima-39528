@@ -20,18 +20,17 @@ class ItemsController < ApplicationController
     end
   end
 
-def show
-  return unless user_signed_in?
-
-  @item = Item.find(params[:id])
-
-  if @item.sold_out?
-    redirect_to root_path
-  else
+  def show
+    return unless user_signed_in?
+  
+    @item = Item.find(params[:id])
+    @purchase = @item.purchase
+  
     @is_owner = current_user == @item.user
-    @can_purchase = !@is_owner && !@item.sold_out?
+    @can_edit = @is_owner && @purchase.nil?
+    @can_purchase = !@is_owner && @purchase.nil?
   end
-end
+  
 
   def edit
   end
