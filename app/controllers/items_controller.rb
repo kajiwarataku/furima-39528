@@ -20,12 +20,18 @@ class ItemsController < ApplicationController
     end
   end
 
-  def show
-    return unless user_signed_in?
+def show
+  return unless user_signed_in?
 
+  @item = Item.find(params[:id])
+
+  if @item.sold_out?
+    redirect_to root_path
+  else
     @is_owner = current_user == @item.user
     @can_purchase = !@is_owner && !@item.sold_out?
   end
+end
 
   def edit
   end
@@ -39,7 +45,11 @@ class ItemsController < ApplicationController
   end
 
   def destroy
+    @item = Item.find(params[:id])
+    
     if @item.user == current_user
+      @item.purchase&.address&.destroy
+      @item.purchase&.destroy
       @item.destroy
       redirect_to root_path
     else
@@ -50,11 +60,12 @@ class ItemsController < ApplicationController
   private
 
   def restrict_edit_access
-    redirect_to root_path unless can_edit_item?
+    @item = Item.find(params[:id])
+    redirect_to root_path if !can_edit_item? || @item.sold_out?
   end
 
   def can_edit_item?
-    user_signed_in? && current_user == @item.user
+    user_signed_in? && current_user == @item.user && !@item.sold_out?
   end
 
   def set_item
