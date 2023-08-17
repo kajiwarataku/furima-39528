@@ -23,7 +23,6 @@ class ItemsController < ApplicationController
   def show
     return unless user_signed_in?
   
-    @item = Item.find(params[:id])
     @purchase = @item.purchase
   
     @is_owner = current_user == @item.user
@@ -44,8 +43,6 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    @item = Item.find(params[:id])
-    
     if @item.user == current_user
       @item.purchase&.address&.destroy
       @item.purchase&.destroy
@@ -64,7 +61,7 @@ class ItemsController < ApplicationController
   end
 
   def can_edit_item?
-    user_signed_in? && current_user == @item.user && !@item.sold_out?
+    user_signed_in? && current_user == @item.user
   end
 
   def set_item
