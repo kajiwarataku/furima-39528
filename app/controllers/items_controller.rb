@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show] 
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_item, only: [:show, :edit, :update, :destroy]
   before_action :restrict_edit_access, only: [:edit, :destroy]
 
@@ -22,10 +22,14 @@ class ItemsController < ApplicationController
 
   def show
     return unless user_signed_in?
-
+  
+    @purchase = @item.purchase
+  
     @is_owner = current_user == @item.user
-    @can_purchase = !@is_owner && !@item.sold_out?
+    @can_edit = @is_owner && @purchase.nil?
+    @can_purchase = !@is_owner && @purchase.nil?
   end
+  
 
   def edit
   end
@@ -40,6 +44,8 @@ class ItemsController < ApplicationController
 
   def destroy
     if @item.user == current_user
+      @item.purchase&.address&.destroy
+      @item.purchase&.destroy
       @item.destroy
       redirect_to root_path
     else
@@ -50,7 +56,8 @@ class ItemsController < ApplicationController
   private
 
   def restrict_edit_access
-    redirect_to root_path unless can_edit_item?
+    @item = Item.find(params[:id])
+    redirect_to root_path if !can_edit_item? || @item.sold_out?
   end
 
   def can_edit_item?
@@ -60,7 +67,6 @@ class ItemsController < ApplicationController
   def set_item
     @item = Item.find(params[:id])
   end
-
 
   def item_params
     params.require(:item).permit(:name, :description, :price, :category_id, :condition_id, :bear_id, :area_id, :send_day_id,
