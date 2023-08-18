@@ -8,6 +8,8 @@ class PurchasesController < ApplicationController
   end
 
   def create
+    gon.public_key = ENV['PAYJP_PUBLIC_KEY']
+    gon.item = @item 
     @order_form = OrderForm.new(purchase_params)
     if @order_form.valid?
       pay_item
